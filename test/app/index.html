@@ -67,7 +67,7 @@
 
 </head>
 <body>
-<h1>Braintree Drop-in demo</h1>
+<h1>GOVX Braintree Drop-in demo</h1>
 
 <p>You can create a <a href="https://developer.paypal.com/developer/accounts/" target="_blank" rel="nofollow noreferrer noopener">PayPal Sandbox account</a> to test the PayPal flow.</p>
 
@@ -113,18 +113,29 @@
     // use your own client token or tokenization key
     authorization: 'sandbox_f252zhq7_hh4cpc39zq4rgjcg',
     container: '#dropin-container',
+    // card: {
+    //   cardholderName: {
+    //     required: true
+    //   },
+    // },
     paypal: {
       flow: 'checkout',
       amount: '10.00', // be sure to validate this amount on your server
       currency: 'USD',
-      landingPageType: 'login' // hard code this so we get a consistent experience for e2e tests
+      landingPageType: 'login', // hard code this so we get a consistent experience for e2e tests
+      buttonStyle: {
+        color: 'blue',
+        shape: 'rect',
+        size: 'large',
+        tagline: false,
+      },
     },
-    paypalCredit: {
-      flow: 'checkout',
-      amount: '10.00',
-      currency: 'USD',
-      landingPageType: 'login' // hard code this so we get a consistent experience for e2e tests
-    },
+    // paypalCredit: {
+    //   flow: 'checkout',
+    //   amount: '10.00',
+    //   currency: 'USD',
+    //   landingPageType: 'login' // hard code this so we get a consistent experience for e2e tests
+    // },
     applePay: {
       displayName: 'Braintree Test',
       paymentRequest: {
@@ -141,10 +152,12 @@
         currencyCode: 'USD',
         totalPriceStatus: 'FINAL',
         totalPrice: '19.99'
-      }
-    },
-    venmo: {
-      allowDesktop: true
+      },
+      button: {
+        buttonColor: 'black',
+        buttonSizeMode: 'fill',
+        buttonType: 'long',
+      },
     },
     vaultManager: true
   };
