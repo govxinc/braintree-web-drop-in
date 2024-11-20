@@ -56,7 +56,8 @@
 }
 
 .braintree-dropin {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  // font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  font-family: geomanist-regular, Helvetica, sans-serif;
   line-height: 1.2;
   margin: 0;
   min-width: 200px;
@@ -476,7 +477,7 @@
 }
 
 .braintree-sheet__header {
-  align-items: center;
+  align-items: start;
   border-bottom: 1px solid @border-color;
   display: flex;
   flex-wrap: wrap;
@@ -624,6 +625,24 @@
         position: absolute;
         right: 11px;
         top: 50%;
+      }
+
+      .input-override {
+        // reset input styles
+        border: none;
+        background-image: none;
+        background-color: transparent;
+        -webkit-box-shadow: none;
+        -moz-box-shadow: none;
+        box-shadow: none;
+        width: 100%;
+        height: 100%;
+        font-size: 16px;
+        outline: none;
+
+        &:focus {
+          outline: none;
+        }
       }
 
       .braintree-form__hosted-field {
@@ -1133,3 +1152,4 @@
 }
 
 @import 'cardinal-overrides';
+@import 'govx-overrides';
