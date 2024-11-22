@@ -113,11 +113,12 @@
     // use your own client token or tokenization key
     authorization: 'sandbox_f252zhq7_hh4cpc39zq4rgjcg',
     container: '#dropin-container',
-    // card: {
-    //   cardholderName: {
-    //     required: true
-    //   },
-    // },
+    dataCollector: true,
+    card: {
+      cardholderName: {
+        required: true
+      },
+    },
     paypal: {
       flow: 'checkout',
       amount: '10.00', // be sure to validate this amount on your server
