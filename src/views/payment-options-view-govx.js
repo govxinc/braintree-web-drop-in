@@ -53,27 +53,31 @@ PaymentOptionsView.prototype._addPaymentOption = function (paymentOptionID) {
     case paymentOptionIDs.applePay:
       paymentSource = this.strings["Apple Pay"];
       html = html.replace(/@ICON/g, "logoApplePay");
+      html = html.replace(/@GOVX_CC_WRAPPER/g, "govx-display-none");
       break;
     case paymentOptionIDs.card:
       paymentSource = this.strings.Card;
-      // html = html.replace(/@ICON/g, "iconCardFront");
-      html = html.replace(/@CLASSNAME/g, "braintree-icon--bordered");
+      html = html.replace(/@GOVX_CC_WRAPPER/g, "govx-cc-icon-container");
       break;
     case paymentOptionIDs.googlePay:
       paymentSource = this.strings["Google Pay"];
       html = html.replace(/@ICON/g, "logoGooglePay");
+      html = html.replace(/@GOVX_CC_WRAPPER/g, "govx-display-none");
       break;
     case paymentOptionIDs.paypal:
       paymentSource = this.strings.PayPal;
       html = html.replace(/@ICON/g, "logoPayPal");
+      html = html.replace(/@GOVX_CC_WRAPPER/g, "govx-display-none");
       break;
     case paymentOptionIDs.paypalCredit:
       paymentSource = this.strings["PayPal Credit"];
       html = html.replace(/@ICON/g, "logoPayPalCredit");
+      html = html.replace(/@GOVX_CC_WRAPPER/g, "govx-display-none");
       break;
     case paymentOptionIDs.venmo:
       paymentSource = this.strings.Venmo;
       html = html.replace(/@ICON/g, "logoVenmo");
+      html = html.replace(/@GOVX_CC_WRAPPER/g, "govx-display-none");
       break;
     default:
       break;
