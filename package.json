@@ -20,7 +20,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/braintree/braintree-web-dropin.git"
+    "url": "git+https://github.com/govxinc/braintree-web-dropin.git"
   },
   "license": "MIT",
   "devDependencies": {
