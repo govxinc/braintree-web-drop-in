@@ -1,12 +1,14 @@
 name: "Braintree Web Drop-in CI"
 
-on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+on: [push]
+
+# on:
+#   push:
+#     branches:
+#       - main
+#   pull_request:
+#     branches:
+#       - main
 
 env:
   PAYPAL_USERNAME: ${{ secrets.PAYPAL_USERNAME }}
