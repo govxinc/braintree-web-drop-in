@@ -3,6 +3,9 @@
   "version": "1.44.0",
   "main": "src/index.js",
   "private": false,
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/@govxinc"
+  },
   "scripts": {
     "build": "gulp build",
     "development": "gulp development",
