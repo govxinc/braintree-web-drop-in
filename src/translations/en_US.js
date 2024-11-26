@@ -95,5 +95,5 @@ module.exports = {
   Visa: "Visa",
   JCB: "JCB",
   Maestro: "Maestro",
-  UnionPay: "UnionPay",
+  UnionPay: "UnionPay"
 };

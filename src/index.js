@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 /**
  * @module braintree-web-drop-in
  * @description There are two ways to integrate Drop-in into your page: a script tag integration and a JavaScript integration using [`dropin.create`](#.create).
@@ -103,15 +103,15 @@
  * </form>
  */
 
-var Dropin = require("./dropin-govx");
-var client = require("braintree-web/client");
-var createFromScriptTag = require("./lib/create-from-script-tag");
-var constants = require("./constants");
-var analytics = require("./lib/analytics");
-var DropinError = require("./lib/dropin-error");
-var wrapPromise = require("@braintree/wrap-promise");
+var Dropin = require('./dropin-govx');
+var client = require('braintree-web/client');
+var createFromScriptTag = require('./lib/create-from-script-tag');
+var constants = require('./constants');
+var analytics = require('./lib/analytics');
+var DropinError = require('./lib/dropin-error');
+var wrapPromise = require('@braintree/wrap-promise');
 
-var VERSION = "__VERSION__";
+var VERSION = '__VERSION__';
 
 /**
  * @typedef {object} cardCreateOptions The configuration options for cards. Internally, Drop-in uses [Hosted Fields](http://braintree.github.io/braintree-web/{@pkg bt-web-version}/module-braintree-web_hosted-fields.html) to render the card form. The `overrides.fields` and `overrides.styles` allow the Hosted Fields to be customized.
@@ -567,19 +567,19 @@ var VERSION = "__VERSION__";
 function create(options) {
   if (!options.authorization) {
     return Promise.reject(
-      new DropinError("options.authorization is required.")
+      new DropinError('options.authorization is required.')
     );
   }
 
   return client
     .create({
-      authorization: options.authorization,
+      authorization: options.authorization
     })
     .catch(function (err) {
       return Promise.reject(
         new DropinError({
-          message: "There was an error creating Drop-in.",
-          braintreeWebError: err,
+          message: 'There was an error creating Drop-in.',
+          braintreeWebError: err
         })
       );
     })
@@ -588,17 +588,17 @@ function create(options) {
 
       if (
         clientInstance.getConfiguration().authorizationType ===
-        "TOKENIZATION_KEY"
+        'TOKENIZATION_KEY'
       ) {
-        analytics.sendEvent(clientInstance, "started.tokenization-key");
+        analytics.sendEvent(clientInstance, 'started.tokenization-key');
       } else {
-        analytics.sendEvent(clientInstance, "started.client-token");
+        analytics.sendEvent(clientInstance, 'started.client-token');
       }
 
       return new Promise(function (resolve, reject) {
         new Dropin({
           merchantConfiguration: options,
-          client: clientInstance,
+          client: clientInstance
         })._initialize(function (err, instance) {
           if (err) {
             reject(err);
@@ -629,8 +629,8 @@ function setAnalyticsIntegration(clientInstance) {
 // we check for document's existence to support server side rendering
 createFromScriptTag(
   create,
-  typeof document !== "undefined" &&
-    document.querySelector("script[data-braintree-dropin-authorization]")
+  typeof document !== 'undefined' &&
+    document.querySelector('script[data-braintree-dropin-authorization]')
 );
 
 module.exports = {
@@ -639,5 +639,5 @@ module.exports = {
    * @description The current version of Drop-in, i.e. `{@pkg version}`.
    * @type {string}
    */
-  VERSION: VERSION,
+  VERSION: VERSION
 };

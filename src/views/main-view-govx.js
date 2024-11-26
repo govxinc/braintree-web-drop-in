@@ -1,20 +1,20 @@
-"use strict";
+'use strict';
 
-var analytics = require("../lib/analytics");
-var analyticsKinds = require("../constants").analyticsKinds;
-var BaseView = require("./base-view");
-var sheetViews = require("./payment-sheet-views");
-var PaymentMethodsView = require("./payment-methods-view-govx");
-var PaymentOptionsView = require("./payment-options-view-govx");
-var DeleteConfirmationView = require("./delete-confirmation-view");
-var addSelectionEventHandler = require("../lib/add-selection-event-handler");
-var wait = require("../lib/wait");
-var supportsFlexbox = require("../lib/supports-flexbox");
+var analytics = require('../lib/analytics');
+var analyticsKinds = require('../constants').analyticsKinds;
+var BaseView = require('./base-view');
+var sheetViews = require('./payment-sheet-views');
+var PaymentMethodsView = require('./payment-methods-view-govx');
+var PaymentOptionsView = require('./payment-options-view-govx');
+var DeleteConfirmationView = require('./delete-confirmation-view');
+var addSelectionEventHandler = require('../lib/add-selection-event-handler');
+var wait = require('../lib/wait');
+var supportsFlexbox = require('../lib/supports-flexbox');
 
 var CHANGE_ACTIVE_PAYMENT_METHOD_TIMEOUT =
-  require("../constants").CHANGE_ACTIVE_PAYMENT_METHOD_TIMEOUT;
+  require('../constants').CHANGE_ACTIVE_PAYMENT_METHOD_TIMEOUT;
 var DEVELOPER_MISCONFIGURATION_MESSAGE =
-  require("../constants").errors.DEVELOPER_MISCONFIGURATION_MESSAGE;
+  require('../constants').errors.DEVELOPER_MISCONFIGURATION_MESSAGE;
 
 function MainView() {
   BaseView.apply(this, arguments);
@@ -35,24 +35,24 @@ MainView.prototype._initialize = function () {
 
   this._views = {};
 
-  this.sheetContainer = this.getElementById("sheet-container");
-  this.sheetErrorText = this.getElementById("sheet-error-text");
+  this.sheetContainer = this.getElementById('sheet-container');
+  this.sheetErrorText = this.getElementById('sheet-error-text');
 
-  this.toggle = this.getElementById("toggle");
-  this.disableWrapper = this.getElementById("disable-wrapper");
-  this.lowerContainer = this.getElementById("lower-container");
+  this.toggle = this.getElementById('toggle');
+  this.disableWrapper = this.getElementById('disable-wrapper');
+  this.lowerContainer = this.getElementById('lower-container');
 
-  this.loadingContainer = this.getElementById("loading-container");
-  this.dropinContainer = this.element.querySelector(".braintree-dropin");
+  this.loadingContainer = this.getElementById('loading-container');
+  this.dropinContainer = this.element.querySelector('.braintree-dropin');
 
   this.supportsFlexbox = supportsFlexbox();
 
-  this.model.on("asyncDependenciesReady", this.hideLoadingIndicator.bind(this));
+  this.model.on('asyncDependenciesReady', this.hideLoadingIndicator.bind(this));
 
-  this.model.on("errorOccurred", this.showSheetError.bind(this));
-  this.model.on("errorCleared", this.hideSheetError.bind(this));
-  this.model.on("preventUserAction", this.preventUserAction.bind(this));
-  this.model.on("allowUserAction", this.allowUserAction.bind(this));
+  this.model.on('errorOccurred', this.showSheetError.bind(this));
+  this.model.on('errorCleared', this.hideSheetError.bind(this));
+  this.model.on('preventUserAction', this.preventUserAction.bind(this));
+  this.model.on('allowUserAction', this.allowUserAction.bind(this));
 
   this.paymentSheetViewIDs = Object.keys(sheetViews).reduce(
     function (ids, sheetViewKey) {
@@ -66,7 +66,7 @@ MainView.prototype._initialize = function () {
           mainView: this,
           model: this.model,
           client: this.client,
-          strings: this.strings,
+          strings: this.strings
         });
         paymentSheetView.initialize();
 
@@ -83,14 +83,14 @@ MainView.prototype._initialize = function () {
     element: this.element,
     model: this.model,
     client: this.client,
-    strings: this.strings,
+    strings: this.strings
   });
   this.addView(this.paymentMethodsViews);
 
   this.deleteConfirmationView = new DeleteConfirmationView({
-    element: this.getElementById("delete-confirmation"),
+    element: this.getElementById('delete-confirmation'),
     model: this.model,
-    strings: this.strings,
+    strings: this.strings
   });
   this.addView(this.deleteConfirmationView);
 
@@ -100,7 +100,7 @@ MainView.prototype._initialize = function () {
   );
 
   this.model.on(
-    "changeActivePaymentMethod",
+    'changeActivePaymentMethod',
     function () {
       wait.delay(CHANGE_ACTIVE_PAYMENT_METHOD_TIMEOUT).then(
         function () {
@@ -119,40 +119,40 @@ MainView.prototype._initialize = function () {
     }.bind(this)
   );
 
-  this.model.on("changeActiveView", this._onChangeActiveView.bind(this));
+  this.model.on('changeActiveView', this._onChangeActiveView.bind(this));
 
   this.model.on(
-    "removeActivePaymentMethod",
+    'removeActivePaymentMethod',
     function () {
       var activePaymentView = this.getView(this.model.getActivePaymentViewId());
 
       if (
         activePaymentView &&
-        typeof activePaymentView.removeActivePaymentMethod === "function"
+        typeof activePaymentView.removeActivePaymentMethod === 'function'
       ) {
         activePaymentView.removeActivePaymentMethod();
       }
     }.bind(this)
   );
 
-  this.model.on("enableEditMode", this.enableEditMode.bind(this));
+  this.model.on('enableEditMode', this.enableEditMode.bind(this));
 
-  this.model.on("disableEditMode", this.disableEditMode.bind(this));
+  this.model.on('disableEditMode', this.disableEditMode.bind(this));
 
   this.model.on(
-    "confirmPaymentMethodDeletion",
+    'confirmPaymentMethodDeletion',
     this.openConfirmPaymentMethodDeletionDialog.bind(this)
   );
   this.model.on(
-    "cancelVaultedPaymentMethodDeletion",
+    'cancelVaultedPaymentMethodDeletion',
     this.cancelVaultedPaymentMethodDeletion.bind(this)
   );
   this.model.on(
-    "startVaultedPaymentMethodDeletion",
+    'startVaultedPaymentMethodDeletion',
     this.startVaultedPaymentMethodDeletion.bind(this)
   );
   this.model.on(
-    "finishVaultedPaymentMethodDeletion",
+    'finishVaultedPaymentMethodDeletion',
     this.finishVaultedPaymentMethodDeletion.bind(this)
   );
 
@@ -162,7 +162,7 @@ MainView.prototype._initialize = function () {
       element: this.getElementById(PaymentOptionsView.ID),
       mainView: this,
       model: this.model,
-      strings: this.strings,
+      strings: this.strings
     });
 
     this.addView(paymentOptionsView);
@@ -177,21 +177,21 @@ MainView.prototype._onChangeActiveView = function (data) {
 
   if (id === PaymentMethodsView.ID) {
     this.paymentMethodsViews.container.classList.add(
-      "braintree-methods--active"
+      'braintree-methods--active'
     );
-    this.sheetContainer.classList.remove("braintree-sheet--active");
+    this.sheetContainer.classList.remove('braintree-sheet--active');
   } else {
     wait.delay(0).then(
       function () {
-        this.sheetContainer.classList.add("braintree-sheet--active");
+        this.sheetContainer.classList.add('braintree-sheet--active');
       }.bind(this)
     );
     this.paymentMethodsViews.container.classList.remove(
-      "braintree-methods--active"
+      'braintree-methods--active'
     );
     if (!this.getView(id).getPaymentMethod()) {
       this.model.setPaymentMethodRequestable({
-        isRequestable: false,
+        isRequestable: false
       });
     }
   }
@@ -234,15 +234,15 @@ MainView.prototype.setPrimaryView = function (id, secondaryViewId) {
   } else if (id === PaymentMethodsView.ID) {
     this.showToggle();
     // Move options below the upper-container
-    this.getElementById("lower-container").appendChild(
-      this.getElementById("options")
+    this.getElementById('lower-container').appendChild(
+      this.getElementById('options')
     );
   } else if (id === PaymentOptionsView.ID) {
     this.hideToggle();
   }
 
   if (!this.supportsFlexbox) {
-    this.element.setAttribute("data-braintree-no-flexbox", true);
+    this.element.setAttribute('data-braintree-no-flexbox', true);
   }
 
   paymentMethod = this.primaryView.getPaymentMethod();
@@ -250,7 +250,7 @@ MainView.prototype.setPrimaryView = function (id, secondaryViewId) {
   this.model.setPaymentMethodRequestable({
     isRequestable: Boolean(paymentMethod && !this.model.isInEditMode()),
     type: paymentMethod && paymentMethod.type,
-    selectedPaymentMethod: paymentMethod,
+    selectedPaymentMethod: paymentMethod
   });
 
   this.model.clearError();
@@ -265,7 +265,7 @@ MainView.prototype.requestPaymentMethod = function () {
       function (payload) {
         analytics.sendEvent(
           this.client,
-          "request-payment-method." + analyticsKinds[payload.type]
+          'request-payment-method.' + analyticsKinds[payload.type]
         );
 
         return payload;
@@ -273,7 +273,7 @@ MainView.prototype.requestPaymentMethod = function () {
     )
     .catch(
       function (err) {
-        analytics.sendEvent(this.client, "request-payment-method.error");
+        analytics.sendEvent(this.client, 'request-payment-method.error');
 
         return Promise.reject(err);
       }.bind(this)
@@ -281,15 +281,15 @@ MainView.prototype.requestPaymentMethod = function () {
 };
 
 MainView.prototype.hideLoadingIndicator = function () {
-  this.dropinContainer.classList.remove("braintree-loading");
-  this.dropinContainer.classList.add("braintree-loaded");
-  this.loadingContainer.classList.add("braintree-hidden");
+  this.dropinContainer.classList.remove('braintree-loading');
+  this.dropinContainer.classList.add('braintree-loaded');
+  this.loadingContainer.classList.add('braintree-hidden');
 };
 
 MainView.prototype.showLoadingIndicator = function () {
-  this.dropinContainer.classList.add("braintree-loading");
-  this.dropinContainer.classList.remove("braintree-loaded");
-  this.loadingContainer.classList.remove("braintree-hidden");
+  this.dropinContainer.classList.add('braintree-loading');
+  this.dropinContainer.classList.remove('braintree-loaded');
+  this.loadingContainer.classList.remove('braintree-hidden');
 };
 
 MainView.prototype.toggleAdditionalOptions = function () {
@@ -320,13 +320,13 @@ MainView.prototype.showToggle = function () {
   if (this.model.isInEditMode()) {
     return;
   }
-  this.toggle.classList.remove("braintree-hidden");
-  this.lowerContainer.classList.add("braintree-hidden");
+  this.toggle.classList.remove('braintree-hidden');
+  this.lowerContainer.classList.add('braintree-hidden');
 };
 
 MainView.prototype.hideToggle = function () {
-  this.toggle.classList.add("braintree-hidden");
-  this.lowerContainer.classList.remove("braintree-hidden");
+  this.toggle.classList.add('braintree-hidden');
+  this.lowerContainer.classList.remove('braintree-hidden');
 };
 
 MainView.prototype.showSheetError = function (error) {
@@ -335,22 +335,22 @@ MainView.prototype.showSheetError = function (error) {
 
   if (this.strings.hasOwnProperty(error)) {
     errorMessage = this.strings[error];
-  } else if (error && typeof error.code === "string") {
+  } else if (error && typeof error.code === 'string') {
     errorMessage =
-      this.strings[snakeCaseToCamelCase(error.code) + "Error"] ||
+      this.strings[snakeCaseToCamelCase(error.code) + 'Error'] ||
       genericErrorMessage;
-  } else if (error === "developerError") {
+  } else if (error === 'developerError') {
     errorMessage = DEVELOPER_MISCONFIGURATION_MESSAGE;
   } else {
     errorMessage = genericErrorMessage;
   }
 
-  this.dropinContainer.classList.add("braintree-sheet--has-error");
+  this.dropinContainer.classList.add('braintree-sheet--has-error');
   this.sheetErrorText.innerHTML = errorMessage;
 };
 
 MainView.prototype.hideSheetError = function () {
-  this.dropinContainer.classList.remove("braintree-sheet--has-error");
+  this.dropinContainer.classList.remove('braintree-sheet--has-error');
 };
 
 MainView.prototype.getOptionsElements = function () {
@@ -358,11 +358,11 @@ MainView.prototype.getOptionsElements = function () {
 };
 
 MainView.prototype.preventUserAction = function () {
-  this.disableWrapper.classList.remove("braintree-hidden");
+  this.disableWrapper.classList.remove('braintree-hidden');
 };
 
 MainView.prototype.allowUserAction = function () {
-  this.disableWrapper.classList.add("braintree-hidden");
+  this.disableWrapper.classList.add('braintree-hidden');
 };
 
 MainView.prototype.teardown = function () {
@@ -391,7 +391,7 @@ MainView.prototype.enableEditMode = function () {
   this.hideToggle();
 
   this.model.setPaymentMethodRequestable({
-    isRequestable: false,
+    isRequestable: false
   });
 };
 
@@ -407,7 +407,7 @@ MainView.prototype.disableEditMode = function () {
   this.model.setPaymentMethodRequestable({
     isRequestable: Boolean(paymentMethod),
     type: paymentMethod && paymentMethod.type,
-    selectedPaymentMethod: paymentMethod,
+    selectedPaymentMethod: paymentMethod
   });
 };
 
@@ -423,7 +423,7 @@ MainView.prototype.cancelVaultedPaymentMethodDeletion = function () {
 };
 
 MainView.prototype.startVaultedPaymentMethodDeletion = function () {
-  this.element.className = "";
+  this.element.className = '';
   this.showLoadingIndicator();
 };
 
@@ -434,7 +434,7 @@ MainView.prototype.finishVaultedPaymentMethodDeletion = function (error) {
 
   if (error && this.model.getPaymentMethods().length > 0) {
     this.model.enableEditMode();
-    this.showSheetError("vaultManagerPaymentMethodDeletionError");
+    this.showSheetError('vaultManagerPaymentMethodDeletionError');
   } else {
     this._sendToDefaultView();
   }
@@ -455,7 +455,7 @@ MainView.prototype._sendToDefaultView = function () {
 
   if (paymentMethods.length > 0) {
     if (preselectVaultedPaymentMethod) {
-      analytics.sendEvent(this.client, "vaulted-card.preselect");
+      analytics.sendEvent(this.client, 'vaulted-card.preselect');
 
       this.model.changeActivePaymentMethod(paymentMethods[0]);
     } else {
@@ -474,7 +474,7 @@ function snakeCaseToCamelCase(s) {
 }
 
 function prefixShowClass(classname) {
-  return "braintree-show-" + classname;
+  return 'braintree-show-' + classname;
 }
 
 module.exports = MainView;

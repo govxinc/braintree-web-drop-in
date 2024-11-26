@@ -1,14 +1,14 @@
-"use strict";
+'use strict';
 
-var analytics = require("../lib/analytics");
-var addSelectionEventHandler = require("../lib/add-selection-event-handler");
-var BaseView = require("./base-view");
-var fs = require("fs");
-var paymentOptionIDs = require("../constants").paymentOptionIDs;
+var analytics = require('../lib/analytics');
+var addSelectionEventHandler = require('../lib/add-selection-event-handler');
+var BaseView = require('./base-view');
+var fs = require('fs');
+var paymentOptionIDs = require('../constants').paymentOptionIDs;
 
 var paymentMethodOptionHTML = fs.readFileSync(
-  __dirname + "/../html/payment-option-govx.html",
-  "utf8"
+  __dirname + '/../html/payment-option-govx.html',
+  'utf8'
 );
 
 function PaymentOptionsView() {
@@ -19,10 +19,10 @@ function PaymentOptionsView() {
 
 PaymentOptionsView.prototype = Object.create(BaseView.prototype);
 PaymentOptionsView.prototype.constructor = PaymentOptionsView;
-PaymentOptionsView.ID = PaymentOptionsView.prototype.ID = "options";
+PaymentOptionsView.ID = PaymentOptionsView.prototype.ID = 'options';
 
 PaymentOptionsView.prototype._initialize = function () {
-  this.container = this.getElementById("payment-options-container");
+  this.container = this.getElementById('payment-options-container');
   this.elements = {};
 
   this.model.supportedPaymentOptions.forEach(
@@ -34,50 +34,50 @@ PaymentOptionsView.prototype._initialize = function () {
 
 PaymentOptionsView.prototype._addPaymentOption = function (paymentOptionID) {
   var paymentSource;
-  var div = document.createElement("div");
+  var div = document.createElement('div');
   var html = paymentMethodOptionHTML;
   var clickHandler = function clickHandler() {
     this.mainView.setPrimaryView(paymentOptionID);
     this.model.selectPaymentOption(paymentOptionID);
     analytics.sendEvent(
       this.client,
-      "selected." + paymentOptionIDs[paymentOptionID]
+      'selected.' + paymentOptionIDs[paymentOptionID]
     );
   }.bind(this);
 
-  div.className = "braintree-option braintree-option__" + paymentOptionID;
-  div.setAttribute("tabindex", "0");
-  div.setAttribute("role", "button");
+  div.className = 'braintree-option braintree-option__' + paymentOptionID;
+  div.setAttribute('tabindex', '0');
+  div.setAttribute('role', 'button');
 
   switch (paymentOptionID) {
     case paymentOptionIDs.applePay:
-      paymentSource = this.strings["Apple Pay"];
-      html = html.replace(/@ICON/g, "logoApplePay");
-      html = html.replace(/@GOVX_CC_WRAPPER/g, "govx-display-none");
+      paymentSource = this.strings['Apple Pay'];
+      html = html.replace(/@ICON/g, 'logoApplePay');
+      html = html.replace(/@GOVX_CC_WRAPPER/g, 'govx-display-none');
       break;
     case paymentOptionIDs.card:
       paymentSource = this.strings.Card;
-      html = html.replace(/@GOVX_CC_WRAPPER/g, "govx-cc-icon-container");
+      html = html.replace(/@GOVX_CC_WRAPPER/g, 'govx-cc-icon-container');
       break;
     case paymentOptionIDs.googlePay:
-      paymentSource = this.strings["Google Pay"];
-      html = html.replace(/@ICON/g, "logoGooglePay");
-      html = html.replace(/@GOVX_CC_WRAPPER/g, "govx-display-none");
+      paymentSource = this.strings['Google Pay'];
+      html = html.replace(/@ICON/g, 'logoGooglePay');
+      html = html.replace(/@GOVX_CC_WRAPPER/g, 'govx-display-none');
       break;
     case paymentOptionIDs.paypal:
       paymentSource = this.strings.PayPal;
-      html = html.replace(/@ICON/g, "logoPayPal");
-      html = html.replace(/@GOVX_CC_WRAPPER/g, "govx-display-none");
+      html = html.replace(/@ICON/g, 'logoPayPal');
+      html = html.replace(/@GOVX_CC_WRAPPER/g, 'govx-display-none');
       break;
     case paymentOptionIDs.paypalCredit:
-      paymentSource = this.strings["PayPal Credit"];
-      html = html.replace(/@ICON/g, "logoPayPalCredit");
-      html = html.replace(/@GOVX_CC_WRAPPER/g, "govx-display-none");
+      paymentSource = this.strings['PayPal Credit'];
+      html = html.replace(/@ICON/g, 'logoPayPalCredit');
+      html = html.replace(/@GOVX_CC_WRAPPER/g, 'govx-display-none');
       break;
     case paymentOptionIDs.venmo:
       paymentSource = this.strings.Venmo;
-      html = html.replace(/@ICON/g, "logoVenmo");
-      html = html.replace(/@GOVX_CC_WRAPPER/g, "govx-display-none");
+      html = html.replace(/@ICON/g, 'logoVenmo');
+      html = html.replace(/@GOVX_CC_WRAPPER/g, 'govx-display-none');
       break;
     default:
       break;
@@ -88,7 +88,7 @@ PaymentOptionsView.prototype._addPaymentOption = function (paymentOptionID) {
     this._generateOptionLabel(paymentSource)
   );
   html = html.replace(/@OPTION_TITLE/g, paymentSource);
-  html = html.replace(/@CLASSNAME/g, "");
+  html = html.replace(/@CLASSNAME/g, '');
 
   div.innerHTML = html;
 
@@ -97,7 +97,7 @@ PaymentOptionsView.prototype._addPaymentOption = function (paymentOptionID) {
   this.container.appendChild(div);
   this.elements[paymentOptionID] = {
     div: div,
-    clickHandler: clickHandler,
+    clickHandler: clickHandler
   };
 };
 
@@ -105,7 +105,7 @@ PaymentOptionsView.prototype._generateOptionLabel = function (
   paymentSourceString
 ) {
   return this.strings.payingWith.replace(
-    "{{paymentSource}}",
+    '{{paymentSource}}',
     paymentSourceString
   );
 };

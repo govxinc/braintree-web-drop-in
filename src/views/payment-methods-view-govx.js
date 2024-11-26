@@ -1,17 +1,17 @@
-"use strict";
+'use strict';
 
-var BaseView = require("./base-view");
-var PaymentMethodView = require("./payment-method-view-govx");
-var DropinError = require("../lib/dropin-error");
-var errors = require("../constants").errors;
-var addSelectionEventHandler = require("../lib/add-selection-event-handler");
+var BaseView = require('./base-view');
+var PaymentMethodView = require('./payment-method-view-govx');
+var DropinError = require('../lib/dropin-error');
+var errors = require('../constants').errors;
+var addSelectionEventHandler = require('../lib/add-selection-event-handler');
 
 var PAYMENT_METHOD_TYPE_TO_TRANSLATION_STRING = {
-  CreditCard: "Card",
-  PayPalAccount: "PayPal",
-  ApplePayCard: "Apple Pay",
-  AndroidPayCard: "Google Pay",
-  VenmoAccount: "Venmo",
+  CreditCard: 'Card',
+  PayPalAccount: 'PayPal',
+  ApplePayCard: 'Apple Pay',
+  AndroidPayCard: 'Google Pay',
+  VenmoAccount: 'Venmo'
 };
 
 function PaymentMethodsView() {
@@ -22,25 +22,25 @@ function PaymentMethodsView() {
 
 PaymentMethodsView.prototype = Object.create(BaseView.prototype);
 PaymentMethodsView.prototype.constructor = PaymentMethodsView;
-PaymentMethodsView.ID = PaymentMethodsView.prototype.ID = "methods";
+PaymentMethodsView.ID = PaymentMethodsView.prototype.ID = 'methods';
 
 PaymentMethodsView.prototype._initialize = function () {
   this.views = [];
-  this.container = this.getElementById("methods-container");
-  this._headingLabel = this.getElementById("methods-label");
-  this._editButton = this.getElementById("methods-edit");
+  this.container = this.getElementById('methods-container');
+  this._headingLabel = this.getElementById('methods-label');
+  this._editButton = this.getElementById('methods-edit');
 
-  this.model.on("addPaymentMethod", this._addPaymentMethod.bind(this));
+  this.model.on('addPaymentMethod', this._addPaymentMethod.bind(this));
   this.model.on(
-    "changeActivePaymentMethod",
+    'changeActivePaymentMethod',
     this._changeActivePaymentMethodView.bind(this)
   );
-  this.model.on("refreshPaymentMethods", this.refreshPaymentMethods.bind(this));
+  this.model.on('refreshPaymentMethods', this.refreshPaymentMethods.bind(this));
 
   this.refreshPaymentMethods();
 
   if (this.model.merchantConfiguration.vaultManager) {
-    this.model.on("removePaymentMethod", this._removePaymentMethod.bind(this));
+    this.model.on('removePaymentMethod', this._removePaymentMethod.bind(this));
 
     addSelectionEventHandler(
       this._editButton,
@@ -53,7 +53,7 @@ PaymentMethodsView.prototype._initialize = function () {
       }.bind(this)
     );
 
-    this._editButton.classList.remove("braintree-hidden");
+    this._editButton.classList.remove('braintree-hidden');
   }
 };
 
@@ -63,14 +63,14 @@ PaymentMethodsView.prototype.removeActivePaymentMethod = function () {
   }
   this.activeMethodView.setActive(false);
   this.activeMethodView = null;
-  this._headingLabel.classList.add("braintree-no-payment-method-selected");
+  this._headingLabel.classList.add('braintree-no-payment-method-selected');
 };
 
 PaymentMethodsView.prototype._getPaymentMethodString = function () {
   var stringKey, paymentMethodTypeString;
 
   if (!this.activeMethodView) {
-    return "";
+    return '';
   }
 
   stringKey =
@@ -80,13 +80,13 @@ PaymentMethodsView.prototype._getPaymentMethodString = function () {
   paymentMethodTypeString = this.strings[stringKey];
 
   return this.strings.payingWith.replace(
-    "{{paymentSource}}",
+    '{{paymentSource}}',
     paymentMethodTypeString
   );
 };
 
 PaymentMethodsView.prototype.enableEditMode = function () {
-  this.container.classList.add("braintree-methods--edit");
+  this.container.classList.add('braintree-methods--edit');
 
   this._editButton.innerHTML = this.strings.deleteCancelButton;
   this._headingLabel.innerHTML = this.strings.editPaymentMethods;
@@ -97,7 +97,7 @@ PaymentMethodsView.prototype.enableEditMode = function () {
 };
 
 PaymentMethodsView.prototype.disableEditMode = function () {
-  this.container.classList.remove("braintree-methods--edit");
+  this.container.classList.remove('braintree-methods--edit');
 
   this._editButton.innerHTML = this.strings.edit;
   this._headingLabel.innerHTML = this._getPaymentMethodString();
@@ -112,7 +112,7 @@ PaymentMethodsView.prototype._addPaymentMethod = function (paymentMethod) {
     model: this.model,
     paymentMethod: paymentMethod,
     client: this.client,
-    strings: this.strings,
+    strings: this.strings
   });
 
   if (this.model.isGuestCheckout && this.container.firstChild) {
@@ -138,7 +138,7 @@ PaymentMethodsView.prototype._removePaymentMethod = function (paymentMethod) {
   for (i = 0; i < this.views.length; i++) {
     if (this.views[i].paymentMethod === paymentMethod) {
       this.views[i].teardown();
-      this._headingLabel.innerHTML = "&nbsp;";
+      this._headingLabel.innerHTML = '&nbsp;';
       this.views.splice(i, 1);
       break;
     }
@@ -163,7 +163,7 @@ PaymentMethodsView.prototype._changeActivePaymentMethodView = function (
     previousActiveMethodView.setActive(false);
   }
   this.activeMethodView.setActive(true);
-  this._headingLabel.classList.remove("braintree-no-payment-method-selected");
+  this._headingLabel.classList.remove('braintree-no-payment-method-selected');
 };
 
 PaymentMethodsView.prototype.requestPaymentMethod = function () {
